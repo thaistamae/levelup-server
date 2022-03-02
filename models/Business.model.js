@@ -1,7 +1,8 @@
 const { Schema, model } = require("mongoose");
 
-const UserSchema = new Schema({
+const BusinessSchema = new Schema({
   name: { type: String, required: true, trim: true },
+  dba: { type: String, required: true, trim: true },
   email: {
     type: String,
     required: true,
@@ -10,19 +11,17 @@ const UserSchema = new Schema({
     lowercase: true,
   },
   passwordHash: { type: String, required: true },
-  birthDate: { type: Date, required: true },
-  CPF: { type: Number, maxLength: 11, required: true, trim: true  },
+  CNPJ: { type: Number, maxLength: 14, required: true, trim: true  },
   phone: { type: Number, required: true, trim: true},
   role: {
     type: String,
-    enum: ["ADMIN", "USER"],
+    enum: ["ADMIN", "BUSINESS"], 
     required: true,
-    default: "USER",
+    default: "BUSINESS",
   },
   image: { type: String, default: "/" }
-
 });
 
-const UserModel = model("User", UserSchema);
+const BusinessModel = model("Business", BusinessSchema);
 
-module.exports = UserModel;
+module.exports = BusinessModel;
