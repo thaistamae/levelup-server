@@ -1,7 +1,8 @@
 const { Schema, model } = require("mongoose");
 
 const PointsSchema = new Schema({
-  //
+    //
+  
 
 });
 
