@@ -3,114 +3,74 @@ const router = require("express").Router();
 const PointsModel = require("../models/Points.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentBusiness = require("../middlewares/attachCurrentBusiness");
-
+const isAdmin = require("../middlewares/isAdmin");
 
 // Crud (CREATE) - HTTP POST
 // Criar uma nova oferta
-router.post("/create-points", isAuthenticated, attachCurrentBusiness, async (req, res) => {
+router.post("/create-points", isAuthenticated, attachCurrentBusiness, isAdmin, async (req, res) => {
   // Requisições do tipo POST tem uma propriedade especial chamada body, que carrega a informação enviada pelo cliente
 
-  const loggedInUser = req.currentBusiness.user;
-  const createPoints = await PointsModel.create({...req.body, businessId: loggedInUser._id});
-
-
-
-
-  console.log(req.body);
-
   try {
-    // Recuperar a senha que está vindo do corpo da requisição
-    const { password } = req.body;
+      const loggedInUser = req.currentBusiness.user;
+      const createPoints = await PointsModel.create(
+          {...req.body},
+          {businessId: loggedInUser._id});
 
 
-    ) {
-      // O código 400 significa Bad Request
-      return res.status(400).json({
-        msg: "Password is required and must have at least 8 characters, uppercase and lowercase letters, numbers and special characters.",
-      });
-    }
-
-
-    // Criptografa a senha
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Salva os dados de usuário no banco de dados (MongoDB) usando o body da requisição como parâmetro
-    const result = await UserModel.create({
-      ...req.body,
-      passwordHash: hashedPassword,
-    });
-
-    // Responder o usuário recém-criado no banco para o cliente (solicitante). O status 201 significa Created
-    return res.status(201).json(result);
-  } catch (err) {
-    console.error(err);
-    // O status 500 signifca Internal Server Error
-    return res.status(500).json({ msg: JSON.stringify(err) });
-  }
-});
-
-// Login
-router.post("/login", async (req, res) => {
-  try {
-    // Extraindo o email e senha do corpo da requisição
-    const { email, password } = req.body;
-
-    // Pesquisar esse usuário no banco pelo email
-    const user = await UserModel.findOne({ email });
-
-    console.log(user);
-
-    // Se o usuário não foi encontrado, significa que ele não é cadastrado
-    if (!user) {
-      return res
-        .status(400)
-        .json({ msg: "This email is not yet registered in our website;" });
-    }
-
-    // Verificar se a senha do usuário pesquisado bate com a senha recebida pelo formulário
-
-    if (await bcrypt.compare(password, user.passwordHash)) {
-      // Gerando o JWT com os dados do usuário que acabou de logar
-      const token = generateToken(user);
-
-      return res.status(200).json({
-        user: {
-          name: user.name,
-          email: user.email,
-          _id: user._id,
-          role: user.role,
-        },
-        token,
-      });
-    } else {
-      // 401 Significa Unauthorized
-      return res.status(401).json({ msg: "Wrong password or email" });
-    }
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ msg: JSON.stringify(err) });
+      return res.status(201).json(createPoints);
+    
+    } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
   }
 });
 
 // cRud (READ) - HTTP GET
 // Buscar dados do usuário
-router.get("/profile", isAuthenticated, attachCurrentUser, (req, res) => {
+router.get("/my-points", isAuthenticated, attachCurrentBusiness, async (req, res) => {
   console.log(req.headers);
 
   try {
     // Buscar o usuário logado que está disponível através do middleware attachCurrentUser
-    const loggedInUser = req.currentUser;
-
-    if (loggedInUser) {
-      // Responder o cliente com os dados do usuário. O status 200 significa OK
-      return res.status(200).json(loggedInUser);
-    } else {
-      return res.status(404).json({ msg: "User not found." });
+    const loggedInUser = req.currentBusiness;
+  
+      const businessGoals = await BusinessModel.find(
+        { owner: loggedInUser._id },
+        { owner: 0, tasks: 0 }
+      );
+  
+      return res.status(200).json(businessGoals);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(error);
     }
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ msg: JSON.stringify(err) });
-  }
-});
+  });
+  
+  router.get("/my-points/:id", isAuth, attachCurrentUser, async (req, res) => {
+    try {
+      const loggedInUser = req.currentBusiness;
+  
+      const foundGoal = await BusinessModel.findOne({ _id: req.params.id });
+      isOwner(foundGoal.owner, loggedInUser._id);
+  
+      return res.status(200).json(foundGoal);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(error);
+    }
+  });
+  
 
-module.exports = router;
+router.delete("/delete-points", isAuthenticated, attachCurrentBusiness, isAdmin, async (req, res) => {
+    const loggedInUser = req.currentUser;
+    
+    await PointsModel.findOneAndUpdate(
+      { _id: loggedInUser._id },
+      { isDeleted: true, deletedDate: Date.now() },
+      { new: true, runValidators: true }
+    );
+  
+    return res.status(200).json({ msg: "Okay" });
+});
+    
+  module.exports = router;
