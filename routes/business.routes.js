@@ -116,4 +116,30 @@ router.get("/profile", isAuthenticated, attachCurrentBusiness, (req, res) => {
   }
 });
 
+// cRud (UPDATE) - HTTP PATCH
+// Alterar dado específico do usuário
+
+router.patch("/profile/update", isAuthenticated, attachCurrentBusiness, async (req, res) => {
+  try {
+    const loggedInUser = req.currentUser;
+
+    const updatedBusiness = await BusinessModel.findOneAndUpdate(
+      { _id: loggedInUser._id },
+      { ...req.body },
+      { new: true, runValidators: true }
+    );
+
+    return res.status(200).json(updatedBusiness);
+  } catch (err) {
+    console.log(err);
+
+    if (err.code === 11000) {
+      return res.status(400).json(err.message ? err.message : err);
+    }
+
+    res.status(500).json(err);
+  }
+});
+
+
 module.exports = router;
