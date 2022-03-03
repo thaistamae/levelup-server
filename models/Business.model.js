@@ -22,7 +22,8 @@ const BusinessSchema = new Schema({
   },
   address: { type: String, required: true, trim: true },
   image: { type: String, default: "/" },
-  isDeleted: { type: String, required: true, trim: true}
+  isDeleted: {type: Boolean, default: false},
+  deletedDate: {type: Date}
 });
 
 
