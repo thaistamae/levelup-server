@@ -141,5 +141,21 @@ router.patch("/profile/update", isAuthenticated, attachCurrentBusiness, async (r
   }
 });
 
+// cruD (DELETE) - HTTP DELETE
+// Deletar usuário
+
+router.delete("/delete-business", isAuthenticated, attachCurrentBusiness, async (req, res) => {
+  const loggedInUser = req.currentUser;
+  
+  await BusinessModel.findOneAndUpdate(
+    { _id: loggedInUser._id },
+    { isDeleted: true, deletedDate: Date.now() },
+    { new: true, runValidators: true }
+  );
+
+  return res.status(200).json({ msg: "Ok" });
+});
+
+
 
 module.exports = router;
