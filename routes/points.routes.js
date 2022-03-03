@@ -1,29 +1,28 @@
 const router = require("express").Router();
-const bcrypt = require("bcryptjs");
 
 const PointsModel = require("../models/Points.model");
-const generateToken = require("../config/jwt.config");
 const isAuthenticated = require("../middlewares/isAuthenticated");
-const attachCurrentUser = require("../middlewares/attachCurrentUser");
+const attachCurrentBusiness = require("../middlewares/attachCurrentBusiness");
 
-const salt_rounds = 10;
 
 // Crud (CREATE) - HTTP POST
-// Criar um novo usuário
-router.post("/signup", async (req, res) => {
+// Criar uma nova oferta
+router.post("/create-points", isAuthenticated, attachCurrentBusiness, async (req, res) => {
   // Requisições do tipo POST tem uma propriedade especial chamada body, que carrega a informação enviada pelo cliente
+
+  const loggedInUser = req.currentBusiness.user;
+  const createPoints = await PointsModel.create({...req.body, businessId: loggedInUser._id});
+
+
+
+
   console.log(req.body);
 
   try {
     // Recuperar a senha que está vindo do corpo da requisição
     const { password } = req.body;
 
-    // Verifica se a senha não está em branco ou se a senha não é complexa o suficiente
-    if (
-      !password ||
-      !password.match(
-        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/
-      )
+
     ) {
       // O código 400 significa Bad Request
       return res.status(400).json({
@@ -31,8 +30,6 @@ router.post("/signup", async (req, res) => {
       });
     }
 
-    // Gera o salt
-    const salt = await bcrypt.genSalt(salt_rounds);
 
     // Criptografa a senha
     const hashedPassword = await bcrypt.hash(password, salt);
