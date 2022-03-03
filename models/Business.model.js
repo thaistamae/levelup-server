@@ -17,7 +17,7 @@ const BusinessSchema = new Schema({
   role: {
     type: String,
     enum: ["BUSINESS", "CUSTOMER"], 
-    required: true,
+    /*required: true,*/
     default: "BUSINESS",
   },
   address: { type: String, required: true, trim: true },
