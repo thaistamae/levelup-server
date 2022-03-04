@@ -12,13 +12,13 @@ app.use(morgan("dev"));
 app.use(cors({ origin: process.env.REACT_APP_URL }));
 
 const businessRouter = require("./routes/business.routes");
-app.use("/api", businessRouter);
+app.use("/api/business", businessRouter);
 
 const pointsRouter = require("./routes/points.routes");
-app.use("/api", pointsRouter);
+app.use("/api/points", pointsRouter);
 
 const UserPointsRouter = require("./routes/UserPoints.routes");
-app.use("/api", UserPointsRouter);
+app.use("/api/user-points", UserPointsRouter);
 
 app.listen(Number(process.env.PORT), () =>
   console.log(`Server up and running at port ${process.env.PORT}`)
