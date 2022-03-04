@@ -12,6 +12,7 @@ const BusinessSchema = new Schema({
   },
   passwordHash: { type: String, required: true },
   CNPJ: { type: Number, maxLength: 14, trim: true  },
+  CPF: { type: Number, maxLength: 11, trim: true },
   birthDate: { type: Date },
   phone: { type: Number, required: true, trim: true },
   role: {
