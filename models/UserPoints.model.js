@@ -1,11 +1,11 @@
 const { Schema, model } = require("mongoose");
 
-const userPointsSchema = new Schema({
+const UserPointsSchema = new Schema({
 
     //________________________//
 
 });
 
-const userPointsModel = model("Points", userPointsSchema);
+const UserPointsModel = model("UserPoints", UserPointsSchema);
 
-module.exports = userPointsModel;
+module.exports = UserPointsModel;

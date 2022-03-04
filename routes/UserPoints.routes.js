@@ -1,8 +1,8 @@
 const router = require("express").Router();
 
-const userPointsModel = require("../models/Points.model");
+const UserPointsModel = require("../models/UserPoints.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
-const attachCurrentBusiness = require("../middlewares/attachCurrentBusiness");
+const attachCurrentUser = require("../middlewares/attachCurrentUser");
 const isAdmin = require("../middlewares/isAdmin");
 
 
