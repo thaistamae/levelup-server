@@ -46,14 +46,15 @@ router.patch(
       try {
 
         const currentPoint = req.currentPoint;
+        const userPointsToUpdate = await UserPointsModel.findOne({ _id: req.params.userPointsId })
 
-        const userPointsToUpdate = await UserPointsModel.findOneAndUpdate(
+        const updateUserPoints = await UserPointsModel.updateOne(
           { _id: req.params.userPointsId },
-          { pointsInThisPromotion: pointsInThisPromotion + Number(currentPoint.creditSystem)},
+          { pointsInThisPromotion: userPointsToUpdate.pointsInThisPromotion + Number(currentPoint.creditSystem)},
           { new: true, runValidators: true }
         );
   
-        return res.status(200).json(userPointsToUpdate);
+        return res.status(200).json(`Você adicionou ${currentPoint.creditSystem} ponto(s) para o cliente ${userPointsToUpdate.customerEmail}.`);
       } catch (err) {
         console.log(err);
   
@@ -65,5 +66,43 @@ router.patch(
       }
     }
   );
+
+// crUd (UPDATE) - HTTP PATCH
+// Compensar os pontos 
+
+router.patch(
+  "/:pointId/credit-points/:userPointsId",
+  isAuthenticated,
+  attachCurrentBusiness,
+  isPoint,
+  async (req, res) => {
+    try {
+
+      const currentPoint = req.currentPoint;
+      const userPointsToCredit = await UserPointsModel.findOne({ _id: req.params.userPointsId })
+
+      if(userPointsToCredit.pointsInThisPromotion >= Number(currentPoint.offerType)){
+        const creditUserPoints = await UserPointsModel.updateOne(
+        { _id: req.params.userPointsId },
+        { pointsInThisPromotion: userPointsToCredit.pointsInThisPromotion - Number(currentPoint.offerType)},
+        { new: true, runValidators: true }
+      );
+
+      return res.status(200).json(`Você creditou ${currentPoint.offerType}, do cliente ${userPointsToCredit.customerEmail}`);
+    }else{ 
+      return res.json({msg: "O cliente não possui pontos suficientes para creditar."})
+    }
+    } catch (err) {
+      console.log(err);
+
+      if (err.code === 11000) {
+        return res.status(400).json(err.message ? err.message : err);
+      }
+
+      res.status(500).json(err);
+    }
+  }
+);
+
 
 module.exports = router;
