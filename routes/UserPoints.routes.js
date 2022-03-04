@@ -35,8 +35,8 @@ router.post("/:pointId/create-card", isAuthenticated, attachCurrentBusiness, isP
 
 router.patch(
     "/:pointId/add-points/:userPointsId",
-    isAuth,
-    attachCurrentUser,
+    isAuthenticated,
+    attachCurrentBusiness,
     isPoint,
     async (req, res) => {
       try {
