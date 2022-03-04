@@ -11,13 +11,11 @@ router.post("/create-points", isAuthenticated, attachCurrentBusiness, isAdmin, a
   // Requisições do tipo POST tem uma propriedade especial chamada body, que carrega a informação enviada pelo cliente
   const loggedInUser = req.currentUser.user;
   try {
-      
+      const loggedInUser = req.currentUser;
       const createPoints = await PointsModel.create(
-          {...req.body},
-          {businessId: loggedInUser._id});
-          console.log(loggedInUser._id)
-
-
+          {...req.body, businessId: loggedInUser._id});
+          //console.log(loggedInUser._id)
+    
       return res.status(201).json(createPoints);
     
     } catch (error) {
@@ -32,12 +30,10 @@ router.get("/my-points", isAuthenticated, attachCurrentBusiness, async (req, res
   console.log(req.headers);
 
   try {
-    // Buscar o usuário logado que está disponível através do middleware attachCurrentUser
-    const loggedInUser = req.currentBusiness;
-  
-      const businessGoals = await BusinessModel.find(
-        { owner: loggedInUser._id },
-        { owner: 0, tasks: 0 }
+    // Buscar o usuário logado que está disponível através do middleware attachCurrentUser  
+    const loggedInUser = req.currentUser  
+    const businessGoals = await PointsModel.find(
+        { businessId: loggedInUser._id }
       );
   
       return res.status(200).json(businessGoals);
@@ -49,7 +45,7 @@ router.get("/my-points", isAuthenticated, attachCurrentBusiness, async (req, res
   
   router.get("/my-points/:id", isAuthenticated, attachCurrentBusiness, async (req, res) => {
     try {
-      const loggedInUser = req.currentBusiness;
+      const loggedInUser = req.currentUser;
   
       const foundGoal = await BusinessModel.findOne({ _id: req.params.id });
       isOwner(foundGoal.owner, loggedInUser._id);
