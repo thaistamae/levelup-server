@@ -20,6 +20,12 @@ app.use("/api/points", pointsRouter);
 const UserPointsRouter = require("./routes/UserPoints.routes");
 app.use("/api/user-points", UserPointsRouter);
 
+const pointsRouter = require("./routes/points.routes");
+app.use("/api/points", pointsRouter);
+
+const userPointsRouter = require("./routes/userPoints.routes");
+app.use("/api/user-points", userPointsRouter);
+
 app.listen(Number(process.env.PORT), () =>
   console.log(`Server up and running at port ${process.env.PORT}`)
 );

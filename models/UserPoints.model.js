@@ -1,8 +1,10 @@
 const { Schema, model } = require("mongoose");
 
 const UserPointsSchema = new Schema({
-
-    //________________________//
+    businessId: { type: mongoose.Schema.Types.ObjectId, ref: "Business"},
+    pointId: { type: mongoose.Schema.Types.ObjectId, ref: "Points"},
+    customerEmail: {type: String, required: true},
+    pointsInThisPromotion: { type: Number, required: true }, 
 
 });
 
