@@ -12,6 +12,7 @@ const BusinessSchema = new Schema({
   },
   passwordHash: { type: String, required: true },
   CNPJ: { type: String, maxLength: 14, trim: true  },
+  CPF: { type: String, maxLength: 11, trim: true },
   birthDate: { type: Date },
   phone: { type: Number, required: true, trim: true },
   role: {
@@ -28,7 +29,8 @@ const BusinessSchema = new Schema({
     state: {type: String, required: true},
     zipcode: {type: String, maxLength: 8, required: true}
   }),
-  image: { type: String, default: "/" },
+  // image: { type: String, default: "/" },
+  profilePicture: { type: String, default: null},
   isDeleted: {type: Boolean, default: false},
   deletedDate: {type: Date}
 });

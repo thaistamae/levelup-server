@@ -1,7 +1,7 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+require("dotenv").config();
 require("./config/db.config")();
 
 const app = express();
@@ -19,6 +19,9 @@ app.use("/api/points", pointsRouter);
 
 const UserPointsRouter = require("./routes/UserPoints.routes");
 app.use("/api/user-points", UserPointsRouter);
+
+const uploadRouter = require("./routes/uploadImages.routes");
+app.use(`/api/upload`, uploadRouter);
 
 app.listen(Number(process.env.PORT), () =>
   console.log(`Server up and running at port ${process.env.PORT}`)
