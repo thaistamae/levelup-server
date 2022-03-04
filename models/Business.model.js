@@ -26,7 +26,11 @@ const BusinessSchema = new Schema({
     number: {type: Number, required: true},
     neighborhood: {type: String, required: true},
     city: { type: String, required: true},
-    state: {type: String, required: true},
+    state: {
+      type: String, 
+      required: true,
+      uppercase: true,
+    },
     zipcode: {type: String, maxLength: 8, required: true}
   }),
   // image: { type: String, default: "/" },
