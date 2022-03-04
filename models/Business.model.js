@@ -11,7 +11,7 @@ const BusinessSchema = new Schema({
     lowercase: true,
   },
   passwordHash: { type: String, required: true },
-  CNPJ: { type: Number, maxLength: 14, trim: true  },
+  CNPJ: { type: String, maxLength: 14, trim: true  },
   birthDate: { type: Date },
   phone: { type: Number, required: true, trim: true },
   role: {
@@ -20,7 +20,14 @@ const BusinessSchema = new Schema({
     /*required: true,*/
     default: "BUSINESS",
   },
-  address: { type: String, required: true, trim: true },
+  address: new Schema({
+    street: {type: String, required: true},
+    number: {type: Number, required: true},
+    neighborhood: {type: String, required: true},
+    city: { type: String, required: true},
+    state: {type: String, required: true},
+    zipcode: {type: String, maxLength: 8, required: true}
+  }),
   image: { type: String, default: "/" },
   isDeleted: {type: Boolean, default: false},
   deletedDate: {type: Date}
