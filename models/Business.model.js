@@ -23,7 +23,7 @@ const BusinessSchema = new Schema({
   },
   address: { type: String, required: true, trim: true },
   // image: { type: String, default: "/" },
-  profilePicture: { type: String, default: null },
+  profilePicture: { type: String, default: null},
   isDeleted: {type: Boolean, default: false},
   deletedDate: {type: Date}
 });
