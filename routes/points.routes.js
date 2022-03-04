@@ -45,10 +45,12 @@ router.get("/my-points", isAuthenticated, attachCurrentBusiness, async (req, res
   
   router.get("/my-points/:id", isAuthenticated, attachCurrentBusiness, async (req, res) => {
     try {
-      const loggedInUser = req.currentUser;
-  
-      const foundGoal = await BusinessModel.findOne({ _id: req.params.id });
-      isOwner(foundGoal.owner, loggedInUser._id);
+        const loggedInUser = req.currentUser;
+
+        const { id } = req.params
+        
+        const foundGoal = await PointsModel.findOne(
+          { _id: req.params.id });
   
       return res.status(200).json(foundGoal);
     } catch (error) {
@@ -58,11 +60,12 @@ router.get("/my-points", isAuthenticated, attachCurrentBusiness, async (req, res
   });
   
 
-router.delete("/delete-points", isAuthenticated, attachCurrentBusiness, isAdmin, async (req, res) => {
+
+  router.delete("/delete-points", isAuthenticated, attachCurrentBusiness, isAdmin, async (req, res) => {
     const loggedInUser = req.currentUser;
     
     await PointsModel.findOneAndUpdate(
-      { _id: loggedInUser._id },
+      { businessId: loggedInUser._id },
       { isDeleted: true, deletedDate: Date.now() },
       { new: true, runValidators: true }
     );

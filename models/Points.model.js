@@ -8,7 +8,9 @@ const PointsSchema = new Schema({
     launch: { type: Date, min: Date.now, default: null }, 
     deadline: { type: Date, min: Date.now, default: null },
     service: { type: String, required: true},
-    businessId: { type: mongoose.Schema.Types.ObjectId, ref: "Business"}
+    businessId: { type: mongoose.Schema.Types.ObjectId, ref: "Business"},
+    isDeleted: {type: Boolean, default: false},
+    deletedDate: {type: Date}
 
 });
 
