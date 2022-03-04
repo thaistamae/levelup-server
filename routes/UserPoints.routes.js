@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const UserPointsModel = require("../models/UserPoints.model");
+
 const PointsModel = require("../models/Points.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentBusiness = require("../middlewares/attachCurrentBusiness");

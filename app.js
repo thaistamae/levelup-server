@@ -12,7 +12,13 @@ app.use(morgan("dev"));
 app.use(cors({ origin: process.env.REACT_APP_URL }));
 
 const businessRouter = require("./routes/business.routes");
-app.use("/api", businessRouter);
+app.use("/api/business", businessRouter);
+
+const pointsRouter = require("./routes/points.routes");
+app.use("/api/points", pointsRouter);
+
+const UserPointsRouter = require("./routes/UserPoints.routes");
+app.use("/api/user-points", UserPointsRouter);
 
 const pointsRouter = require("./routes/points.routes");
 app.use("/api/points", pointsRouter);
