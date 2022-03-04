@@ -9,12 +9,13 @@ const isAdmin = require("../middlewares/isAdmin");
 // Criar uma nova oferta
 router.post("/create-points", isAuthenticated, attachCurrentBusiness, isAdmin, async (req, res) => {
   // Requisições do tipo POST tem uma propriedade especial chamada body, que carrega a informação enviada pelo cliente
-
+  const loggedInUser = req.currentUser.user;
   try {
-      const loggedInUser = req.currentBusiness.user;
+      
       const createPoints = await PointsModel.create(
           {...req.body},
           {businessId: loggedInUser._id});
+          console.log(loggedInUser._id)
 
 
       return res.status(201).json(createPoints);
