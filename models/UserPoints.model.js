@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 
 const UserPointsSchema = new Schema({
     businessId: { type: mongoose.Schema.Types.ObjectId, ref: "Business"},
