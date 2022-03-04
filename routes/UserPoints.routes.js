@@ -15,14 +15,18 @@ router.post("/:pointId/create-card", isAuthenticated, attachCurrentBusiness, isP
   console.log(req.body);
 
   try {
+    const currentPoint = req.currentPoint;
+    
     // Salva os dados da pontuação do usuário no banco de dados (MongoDB) usando o body da requisição como parâmetro
     const userPoints = await UserPointsModel.create({
         ...req.body,
         pointId: req.params.pointId,
+        deadline: currentPoint.deadline,
+        goal: currentPoint.goal
     });
 
     // Responder o usuário recém-criado no banco para o cliente (solicitante). O status 201 significa Created
-    return res.status(201).json(result);
+    return res.status(201).json(userPoints);
   } catch (err) {
     console.error(err);
     // O status 500 signifca Internal Server Error
@@ -41,11 +45,11 @@ router.patch(
     async (req, res) => {
       try {
 
-        const currentPoint = req.currentPoint.point
+        const currentPoint = req.currentPoint;
 
-        const userPointsToUpdate = await userPointsModel.findOneAndUpdate(
+        const userPointsToUpdate = await UserPointsModel.findOneAndUpdate(
           { _id: req.params.userPointsId },
-          { pointsInThisPromotion: pointsInThisPromotion + currentPoint.creditSystem},
+          { pointsInThisPromotion: pointsInThisPromotion + Number(currentPoint.creditSystem)},
           { new: true, runValidators: true }
         );
   
