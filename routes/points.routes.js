@@ -46,7 +46,7 @@ router.get("/my-points", isAuthenticated, attachCurrentBusiness, async (req, res
     }
   });
   
-  router.get("/my-points/:id", isAuth, attachCurrentUser, async (req, res) => {
+  router.get("/my-points/:id", isAuthenticated, attachCurrentBusiness, async (req, res) => {
     try {
       const loggedInUser = req.currentBusiness;
   

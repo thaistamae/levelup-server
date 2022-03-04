@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-
+const mongoose = require("mongoose");
 
 const PointsSchema = new Schema({
     creditSystem: { type: Number, required: true, enum: [ 1, 1.5, 2] }, // 1 serviço = 2ponts
@@ -8,7 +8,7 @@ const PointsSchema = new Schema({
     launch: { type: Date, min: Date.now, default: null }, 
     deadline: { type: Date, min: Date.now, default: null },
     service: { type: String, required: true},
-    businessId: { type: mongoose.Schema.Types.ObjectID, ref: "Business"}
+    businessId: { type: mongoose.Schema.Types.ObjectId, ref: "Business"}
 
 });
 
