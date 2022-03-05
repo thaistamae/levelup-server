@@ -23,6 +23,9 @@ app.use("/api/user-points", UserPointsRouter);
 const uploadRouter = require("./routes/uploadImages.routes");
 app.use(`/api/upload`, uploadRouter);
 
+const resetPasswordRouter = require("./routes/resetPassword.routes")
+app.use(`/api/password`, resetPasswordRouter);
+
 app.listen(Number(process.env.PORT), () =>
   console.log(`Server up and running at port ${process.env.PORT}`)
 );

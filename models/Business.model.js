@@ -36,7 +36,8 @@ const BusinessSchema = new Schema({
   // image: { type: String, default: "/" },
   profilePicture: { type: String, default: null},
   isDeleted: {type: Boolean, default: false},
-  deletedDate: {type: Date}
+  deletedDate: {type: Date},
+  resetPassword: { type: String, default: ""}
 });
 
 

@@ -11,7 +11,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "levelup",
+    folder: "picture",
     format: async (req, file) => "png",
     use_filename: true,
   },
