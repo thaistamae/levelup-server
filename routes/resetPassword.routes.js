@@ -6,7 +6,6 @@ const BusinessModel = require("../models/Business.model");
 
 const nodemailer = require("nodemailer");
 
-//Configura o nodemailer para envio de emails
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -17,20 +16,16 @@ const transporter = nodemailer.createTransport({
 
 const salt_rounds = 10;
 
-//Rota de recuperação de senha que recebe o email do usuario solicitante
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
 
-    //Busca o usuario
     let user = await BusinessModel.findOne({ email });
 
-    //Se não encontrar, responde com erro
     if (!user) {
       return res.status(400).json({ msg: "Usuário não encontrado" });
     }
 
-    //Gera o token temporario
     const temporaryToken = jwt.sign(
       { _id: user._id },
       process.env.SIGN_SECRET_RESET_PASSWORD,
@@ -39,7 +34,6 @@ router.post("/forgot-password", async (req, res) => {
       }
     );
 
-    //salva o token no campo "resetPassword"
     if (user.role === "CUSTOMER") {
       await BusinessModel.findOneAndUpdate(
         { _id: user._id },
@@ -47,7 +41,6 @@ router.post("/forgot-password", async (req, res) => {
       );
     }
 
-    //salva o token no campo "resetPassword"
     if (user.role === "BUSINESS") {
       await BusinessModel.findOneAndUpdate(
         { _id: user._id },
@@ -55,7 +48,6 @@ router.post("/forgot-password", async (req, res) => {
       );
     }
 
-    //Configura o assunto e corpo do email
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: user.email,
@@ -63,7 +55,6 @@ router.post("/forgot-password", async (req, res) => {
       html: `<p>Clique no link para redefinir sua senha:<p><a href=https://levelup.netlify.app/new-password/${temporaryToken}>LINK</a>`,
     };
 
-    //Dispara o email para o usuário
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
         console.log(err);
@@ -78,12 +69,10 @@ router.post("/forgot-password", async (req, res) => {
 
 router.put("/reset-password/:token", async (req, res) => {
   try {
-    //Verifica a existência do token
     if (!req.params.token) {
       return res.status(400).json({ msg: "Token incorreto ou expirado!" });
     }
 
-    //Verifica se o token é valido e não esta expirado
     jwt.verify(
       req.params.token,
       process.env.SIGN_SECRET_RESET_PASSWORD,
@@ -94,23 +83,18 @@ router.put("/reset-password/:token", async (req, res) => {
       }
     );
 
-    //Busca o usuario pelo token de recuperacao
     let user = await BusinessModel.findOne({ resetPassword: req.params.token });
 
-    //Se nao encontrar, busca o business pelo token de recuperao
     if (!user) {
       user = await BusinessModel.findOne({ resetPassword: req.params.token });
     }
 
-    //Caso não exista, responde com erro
     if (!user) {
       return res.status(400).json({ msg: "Token incorreto ou expirado!" });
     }
 
-    //Extrai a nova senha do usuario
     const { newPassword } = req.body;
 
-    //Verifica se a senha existe e se atende todos os requisitos
     if (
       !newPassword ||
       !newPassword.match(
@@ -122,13 +106,10 @@ router.put("/reset-password/:token", async (req, res) => {
       });
     }
 
-    //Gera o salt
     const salt = await bcrypt.genSalt(salt_rounds);
 
-    //Criptografa a senha
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    //encontra business, salva a nova senha e limpa o campo de resetPassword
     if (user.role === "BUSINESS") {
       await BusinessModel.findOneAndUpdate(
         { _id: user._id },
