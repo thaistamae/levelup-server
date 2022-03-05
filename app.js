@@ -8,7 +8,6 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
-// Não esquecer de criar variável de ambiente com o endereço do seu app React (local ou deployado no Netlify)
 app.use(cors({ origin: process.env.REACT_APP_URL }));
 
 const businessRouter = require("./routes/business.routes");
@@ -23,7 +22,7 @@ app.use("/api/user-points", UserPointsRouter);
 const uploadRouter = require("./routes/uploadImages.routes");
 app.use(`/api/upload`, uploadRouter);
 
-const resetPasswordRouter = require("./routes/resetPassword.routes")
+const resetPasswordRouter = require("./routes/resetPassword.routes");
 app.use(`/api/password`, resetPasswordRouter);
 
 app.listen(Number(process.env.PORT), () =>
