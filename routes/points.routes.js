@@ -11,7 +11,7 @@ router.post(
   attachCurrentBusiness,
   isAdmin,
   async (req, res) => {
-    const loggedInUser = req.currentUser.user;
+
     try {
       const loggedInUser = req.currentUser;
       const createPoints = await PointsModel.create({
