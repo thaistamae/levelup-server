@@ -27,6 +27,27 @@ router.post(
   }
 );
 
+router.get(
+  "/user-points",
+  isAuthenticated,
+  attachCurrentBusiness,
+  async (req, res) => {
+    console.log(req.headers);
+
+    try {
+      const loggedInUser = req.currentUser;
+      const finduserPoints = await PointsModel.find({
+        businessId: loggedInUser._id,
+      });
+
+      return res.status(200).json(finduserPoints);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(error);
+    }
+  }
+);
+
 router.patch(
   "/:pointId/add-points/:userPointsId",
   isAuthenticated,
@@ -43,7 +64,7 @@ router.patch(
         {
           pointsAccumulated:
             userPointsToUpdate.pointsAccumulated +
-            Number(currentPoint.creditSystem),
+            Number(currentPoint.creditSystem),  
         },
         { new: true, runValidators: true }
       );
