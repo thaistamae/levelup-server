@@ -25,6 +25,9 @@ app.use(`/api/upload`, uploadRouter);
 const resetPasswordRouter = require("./routes/resetPassword.routes");
 app.use(`/api/password`, resetPasswordRouter);
 
+const compensationRuleRouter = require("./routes/compensationRules.routes");
+app.use(`/api/compensation-rule`, compensationRuleRouter);
+
 app.listen(Number(process.env.PORT), () =>
   console.log(`Server up and running at port ${process.env.PORT}`)
 );
