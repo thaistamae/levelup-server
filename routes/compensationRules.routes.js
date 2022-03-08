@@ -11,7 +11,14 @@ router.post(
     attachCurrentBusiness,
     isAdmin,
     async (req, res) => {
-  
+      
+      {/*result.map((currentDate) => {
+        if(currentDate.launch < new Date().toLocaleDateString()){
+          const index = result.indexOf(currentDate);
+          result.splice(index, 1);
+        }
+      })*/}  
+
       try {
         const loggedInUser = req.currentUser;
         const createRule = await CompensationRulesModel.create({
@@ -36,7 +43,7 @@ router.post(
         const loggedInUser = req.currentUser;
         const addOptionalRule = await CompensationRulesModel.findOneAndUpdate(
             {businessId: loggedInUser._id},
-            {optionalAddition: req.body, additionDate: Date.now() },
+            {...req.body, additionDate: Date.now() },
             //ver se conseguimos colocar mais campos de adicionar regras
             {new: true, runValidators: true }
         );
