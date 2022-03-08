@@ -1,8 +1,11 @@
 const router = require("express").Router();
 
 const UserPointsModel = require("../models/UserPoints.model");
+const PointsModel = require("../models/Points.model");
+
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentBusiness = require("../middlewares/attachCurrentBusiness");
+const isPoint = require("../middlewares/isPoint");
 
 router.post(
   "/create-card",
@@ -52,6 +55,7 @@ router.patch(
   "/:pointId/add-points/:userPointsId",
   isAuthenticated,
   attachCurrentBusiness,
+  isPoint,
   async (req, res) => {
     try {
       const currentPoint = req.currentPoint;
@@ -59,7 +63,7 @@ router.patch(
         _id: req.params.userPointsId,
       });
 
-      const updateUserPoints = await UserPointsModel.updateOne(
+      const updateUserPoints = await UserPointsModel.findByIdAndUpdate(
         { _id: req.params.userPointsId },
         {
           pointsAccumulated:
@@ -90,19 +94,20 @@ router.patch(
   "/:pointId/credit-points/:userPointsId",
   isAuthenticated,
   attachCurrentBusiness,
+  isPoint,
   async (req, res) => {
     try {
       const currentPoint = req.currentPoint;
       const userPointsToCredit = await UserPointsModel.findOne({
         _id: req.params.userPointsId,
       });
-
+      
       const creditUserPoints = await UserPointsModel.updateOne(
         { _id: req.params.userPointsId },
         {
           pointsAccumulated:
             userPointsToCredit.pointsAccumulated -
-            req.body,
+            req.body.number,
         },
         { new: true, runValidators: true }
       );
@@ -110,7 +115,7 @@ router.patch(
       return res
         .status(200)
         .json(
-         `Você creditou ${req.body}, do cliente ${userPointsToCredit.customerEmail}`
+         `Você creditou ${req.body.number}, do cliente ${userPointsToCredit.customerEmail}`
         );
 
     } catch (err) {
