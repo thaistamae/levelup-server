@@ -41,11 +41,13 @@ router.patch(
   attachCurrentBusiness,
   async (req, res) => {
     try {
+      if(!req.body.optionalAddition){
+        return res.status(400).json({msg: "Gentileza fornecer campo correto"})
+      }
       const loggedInUser = req.currentUser;
       const addOptionalRule = await CompensationRulesModel.findOneAndUpdate(
         { businessId: loggedInUser._id },
-        { ...req.body, additionDate: Date.now() },
-        //ver se conseguimos colocar mais campos de adicionar regras
+        { $push:{optionalAddition: {...req.body}}  },
         { new: true, runValidators: true }
       );
 

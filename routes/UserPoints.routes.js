@@ -39,7 +39,7 @@ router.get(
 
     try {
       const loggedInUser = req.currentUser;
-      const finduserPoints = await PointsModel.find({
+      const finduserPoints = await UserPointsModel.find({
         businessId: loggedInUser._id,
       });
 
