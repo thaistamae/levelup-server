@@ -9,8 +9,9 @@ const CompensationRulesSchema = new Schema({
   launch: { type: Date, min: Date.now() },
   expirationDate: { type: Date, default: oneYearFromNow() },
   rules: { type: String, required: true },
-  optionalAddition: { type: String },
-  additionDate: { type: Date },
+  optionalAddition: [new Schema({
+    addition:{type: String}, 
+    additionDate: {type: Date, default: Date.now}})],
   businessId: { type: mongoose.Schema.Types.ObjectId, ref: "Business" },
 });
 
