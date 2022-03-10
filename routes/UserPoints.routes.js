@@ -1,11 +1,9 @@
 const router = require("express").Router();
 
 const UserPointsModel = require("../models/UserPoints.model");
-const PointsModel = require("../models/Points.model");
 
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentBusiness = require("../middlewares/attachCurrentBusiness");
-const isPoint = require("../middlewares/isPoint");
 
 router.post(
   "/create-card",
@@ -19,7 +17,7 @@ router.post(
 
       const userPoints = await UserPointsModel.create({
         ...req.body,
-        businessId: loggedInUser._id
+        businessId: loggedInUser._id,
       });
 
       return res.status(201).json(userPoints);
@@ -52,32 +50,28 @@ router.get(
 );
 
 router.patch(
-  "/:pointId/add-points/:userPointsId",
+  "/add-points/:userPointsId",
   isAuthenticated,
   attachCurrentBusiness,
-  isPoint,
   async (req, res) => {
     try {
-      const currentPoint = req.currentPoint;
+      if (req.body.points === 0 || req.body.points === "") {
+        return res.status(400).json({ msg: "points is invalid." });
+      }
       const userPointsToUpdate = await UserPointsModel.findOne({
         _id: req.params.userPointsId,
       });
 
-      const updateUserPoints = await UserPointsModel.findByIdAndUpdate(
+      const updateUserPoints = await UserPointsModel.findOneAndUpdate(
         { _id: req.params.userPointsId },
         {
           pointsAccumulated:
-            userPointsToUpdate.pointsAccumulated +
-            Number(currentPoint.creditSystem),  
+            userPointsToUpdate.pointsAccumulated + Number(req.body.points),
         },
         { new: true, runValidators: true }
       );
 
-      return res
-        .status(200)
-        .json(
-          `Você adicionou ${currentPoint.creditSystem} ponto(s) para o cliente ${userPointsToUpdate.customerEmail}.`
-        );
+      return res.status(200).json(updateUserPoints);
     } catch (err) {
       console.log(err);
 
@@ -91,33 +85,33 @@ router.patch(
 );
 
 router.patch(
-  "/:pointId/credit-points/:userPointsId",
+  "/credit-points/:userPointsId",
   isAuthenticated,
   attachCurrentBusiness,
-  isPoint,
   async (req, res) => {
     try {
-      const currentPoint = req.currentPoint;
       const userPointsToCredit = await UserPointsModel.findOne({
         _id: req.params.userPointsId,
       });
-      
-      const creditUserPoints = await UserPointsModel.updateOne(
-        { _id: req.params.userPointsId },
-        {
-          pointsAccumulated:
-            userPointsToCredit.pointsAccumulated -
-            req.body.number,
-        },
-        { new: true, runValidators: true }
-      );
 
-      return res
-        .status(200)
-        .json(
-         `Você creditou ${req.body.number}, do cliente ${userPointsToCredit.customerEmail}`
+      if (userPointsToCredit.pointsAccumulated - Number(req.body.number) >= 0) {
+        const creditUserPoints = await UserPointsModel.findOneAndUpdate(
+          { _id: req.params.userPointsId },
+          {
+            pointsAccumulated:
+              userPointsToCredit.pointsAccumulated - Number(req.body.number),
+          },
+          { new: true, runValidators: true }
         );
 
+        return res.status(200).json(creditUserPoints);
+      } else {
+        return res
+          .status(401)
+          .json({
+            msg: "o cliente não possui pontos suficientes para creditar",
+          });
+      }
     } catch (err) {
       console.log(err);
 
