@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+/*const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
 
 const DiscountSchema = new Schema({
@@ -15,3 +15,4 @@ const DiscountSchema = new Schema({
 const DiscountModel = model("Discount", DiscountSchema);
 
 module.exports = DiscountModel;
+*/

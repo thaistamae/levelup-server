@@ -16,11 +16,14 @@ app.use("/api/business", businessRouter);
 const pointsRouter = require("./routes/points.routes");
 app.use("/api/points", pointsRouter);
 
-const discountRouter = require("./routes/discount.routes");
-app.use("/api/discount", discountRouter);
-
 const UserPointsRouter = require("./routes/UserPoints.routes");
 app.use("/api/user-points", UserPointsRouter);
+
+/*const discountRouter = require("./routes/discount.routes");
+app.use("/api/discount", discountRouter);
+
+const userDiscountRouter = require("./routes/userDiscount.routes");
+app.use("/api/user-discount", userDiscountRouter);*/
 
 const uploadRouter = require("./routes/uploadImages.routes");
 app.use(`/api/upload`, uploadRouter);
