@@ -64,4 +64,28 @@ router.patch(
   }
 );
 
+router.get(
+  "/compensation",
+  isAuthenticated,
+  attachCurrentBusiness,
+  async (req, res) => {
+    try {
+      const loggedInUser = req.currentUser;
+      const compensationRule = await CompensationRulesModel.find(
+        { businessId: loggedInUser._id },
+      );
+
+      return res.status(200).json(compensationRule);
+    } catch (err) {
+      console.log(err);
+
+      if (err.code === 11000) {
+        return res.status(400).json(err.message ? err.message : err);
+      }
+
+      res.status(500).json(err);
+    }
+  }
+);
+
 module.exports = router;
