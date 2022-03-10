@@ -1,4 +1,4 @@
-const router = require("express").Router();
+/*const router = require("express").Router();
 
 const DiscountModel = require("../models/Discount.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
@@ -68,6 +68,9 @@ router.get(
   }
 );
 
+
+      
+
 router.delete(
   "/delete-discount",
   isAuthenticated,
@@ -86,4 +89,4 @@ router.delete(
   }
 );
 
-module.exports = router;
+module.exports = router; */
