@@ -85,16 +85,15 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/profile", isAuthenticated, attachCurrentBusiness, async (req, res) => {
+router.get("/profile", isAuthenticated, attachCurrentBusiness, (req, res) => {
   console.log(req.headers);
 
   try {
-    const superAddress = await BusinessModel.find().populate("address");
 
     const loggedInUser = req.currentUser;
 
     if (loggedInUser) {
-      return res.status(200).json(superAddress, loggedInUser);
+      return res.status(200).json(loggedInUser);
     } else {
       return res.status(404).json({ msg: "User not found." });
     }

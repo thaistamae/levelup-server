@@ -12,7 +12,7 @@ const CompensationRulesSchema = new Schema({
   optionalAddition: [new Schema({
     addition:{type: String}, 
     additionDate: {type: Date, default: Date.now}})],
-  businessId: { type: mongoose.Schema.Types.ObjectId, ref: "Business" },
+  businessId: { type: mongoose.Schema.Types.ObjectId, ref: "Business" , unique: true},
 });
 
 const CompensationRulesModel = model(
