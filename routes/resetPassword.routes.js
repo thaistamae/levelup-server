@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const BusinessModel = require("../models/Business.model");
+const isAuthenticated = require("../middlewares/isAuthenticated");
+const attachCurrentBusiness = require("../middlewares/attachCurrentBusiness");
 
 const nodemailer = require("nodemailer");
 
@@ -110,19 +112,10 @@ router.put("/reset-password/:token", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    if (user.role === "BUSINESS") {
       await BusinessModel.findOneAndUpdate(
         { _id: user._id },
         { $set: { passwordHash: hashedPassword, resetPassword: "" } }
       );
-    }
-
-    if (user.role === "CUSTOMER") {
-      await BusinessModel.findOneAndUpdate(
-        { _id: user._id },
-        { $set: { passwordHash: hashedPassword, resetPassword: "" } }
-      );
-    }
 
     res.status(200).json({ message: "Senha redefinida com sucesso" });
   } catch (err) {
