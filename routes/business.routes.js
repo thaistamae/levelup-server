@@ -12,6 +12,16 @@ router.post("/signup", async (req, res) => {
   console.log(req.body);
 
   try {
+    const { email } = req.body;
+
+    const findEmail = await BusinessModel.findOne({ email: email });
+
+    if (findEmail) {
+      return res
+        .status(400)
+        .json({ msg: "E-mail já cadastrado!" });
+    }
+     
     const { password } = req.body;
     if (
       !password ||
