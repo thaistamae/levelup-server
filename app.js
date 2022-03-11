@@ -23,10 +23,10 @@ app.use("/api/user-points", UserPointsRouter);
 app.use("/api/discount", discountRouter);
 
 const userDiscountRouter = require("./routes/userDiscount.routes");
-app.use("/api/user-discount", userDiscountRouter);*/
+app.use("/api/user-discount", userDiscountRouter);
 
 const uploadRouter = require("./routes/uploadImages.routes");
-app.use(`/api/upload`, uploadRouter);
+app.use(`/api/upload`, uploadRouter);*/
 
 const resetPasswordRouter = require("./routes/resetPassword.routes");
 app.use(`/api/password`, resetPasswordRouter);
