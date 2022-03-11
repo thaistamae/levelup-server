@@ -17,7 +17,7 @@ Businesses - regardless of the size of their operation or industry - can use Lev
 
 - [Larissa](https://github.com/gilgameshr3rr) is a catwoman and a full-stack developer.
 
-- [Thais](https://github.com/thaistamae) is a fairy from São Paulo.
+- [Thais](https://github.com/thaistamae) is an expert in numbers and a full-stack developer who is quick to deal with different codes.
 
 - [Joe](https://github.com/jdc212) is a coding candidate currently learning JavaScript, HTML/CSS. He's into media and tech.
 
