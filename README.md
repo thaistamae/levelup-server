@@ -1,5 +1,8 @@
 # Level Up
 
+![Level Up logo](https://github.com/jdc212/levelup-client/blob/main/src/assets/styles/LevelUplogocropped.png)
+<br>
+
 *Level Up* is a loyalty program platform that offers retailers the chance to improve their performance and by creating their own exclusive and unique reward programs to reach their target audience and please their customers and shoppers.
 
 
