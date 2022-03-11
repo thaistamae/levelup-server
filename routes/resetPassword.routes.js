@@ -54,7 +54,7 @@ router.post("/forgot-password", async (req, res) => {
       from: process.env.EMAIL_USER,
       to: user.email,
       subject: "Redefinir senha",
-      html: `<p>Clique no link para redefinir sua senha:<p><a href=https://levelup.netlify.app/new-password/${temporaryToken}>LINK</a>`,
+      html: `<p>Clique no link para redefinir sua senha:<p><a href=https://leveluployalty.netlify.app/new-password/${temporaryToken}>LINK</a>`,
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
