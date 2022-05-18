@@ -19,9 +19,9 @@ const BusinessSchema = new Schema({
     default: "BUSINESS",
   },
   address: { type: String, required: true },
-  profileAvatarUrl: { 
+  profileAvatarUrl: {
     type: String,
-    trim: true, 
+    trim: true,
     default: "/",
   },
   isDeleted: { type: Boolean, default: false },

@@ -2,10 +2,10 @@ const BusinessModel = require("../models/Business.model");
 
 module.exports = async (req, res, next) => {
   try {
-    const loggedInUser = req.user;
+    const loggedInBusiness = req.user;
 
     const user = await BusinessModel.findOne(
-      { _id: loggedInUser._id },
+      { _id: loggedInBusiness._id },
       { passwordHash: 0, __v: 0 }
     );
 

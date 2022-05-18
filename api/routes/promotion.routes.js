@@ -1,25 +1,24 @@
-/*const router = require("express").Router();
+const router = require("express").Router();
 
-const DiscountModel = require("../models/Discount.model");
+const PromotionModel = require("../models/Promotion.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentBusiness = require("../middlewares/attachCurrentBusiness");
 const isAdmin = require("../middlewares/isAdmin");
 
 router.post(
-  "/create-discount",
+  "/create-promotion",
   isAuthenticated,
   attachCurrentBusiness,
   isAdmin,
   async (req, res) => {
-
     try {
-      const loggedInUser = req.currentUser;
-      const createDiscount = await DiscountModel.create({
+      const loggedInBusiness = req.currentUser;
+      const createPromotion = await PromotionModel.create({
         ...req.body,
-        businessId: loggedInUser._id,
+        businessId: loggedInBusiness._id,
       });
 
-      return res.status(201).json(createDiscount);
+      return res.status(201).json(createPromotion);
     } catch (error) {
       console.log(error);
       return res.status(500).json(error);
@@ -28,19 +27,19 @@ router.post(
 );
 
 router.get(
-  "/my-discount",
+  "/my-promotions",
   isAuthenticated,
   attachCurrentBusiness,
   async (req, res) => {
     console.log(req.headers);
 
     try {
-      const loggedInUser = req.currentUser;
-      const discountGoals = await DiscountModel.find({
-        businessId: loggedInUser._id,
+      const loggedInBusiness = req.currentUser;
+      const businessGoals = await PromotionModel.find({
+        businessId: loggedInBusiness._id,
       });
 
-      return res.status(200).json(discountGoals);
+      return res.status(200).json(businessGoals);
     } catch (error) {
       console.log(error);
       return res.status(500).json(error);
@@ -49,18 +48,18 @@ router.get(
 );
 
 router.get(
-  "/my-discount/:id",
+  "/my-promotion/:id",
   isAuthenticated,
   attachCurrentBusiness,
   async (req, res) => {
     try {
-      const loggedInUser = req.currentUser;
+      const loggedInBusiness = req.currentUser;
 
       const { id } = req.params;
 
-      const foundDiscountGoal = await DiscountModel.findOne({ _id: req.params.id });
+      const foundGoal = await PromotionModel.findOne({ _id: req.params.id });
 
-      return res.status(200).json(foundDiscountGoal);
+      return res.status(200).json(foundGoal);
     } catch (error) {
       console.log(error);
       return res.status(500).json(error);
@@ -68,25 +67,22 @@ router.get(
   }
 );
 
-
-      
-
 router.delete(
-  "/delete-discount",
+  "/delete-promotion",
   isAuthenticated,
   attachCurrentBusiness,
   isAdmin,
   async (req, res) => {
-    const loggedInUser = req.currentUser;
+    const loggedInBusiness = req.currentUser;
 
-    await DiscountModel.findOneAndUpdate(
-      { businessId: loggedInUser._id },
+    await PromotionModel.findOneAndUpdate(
+      { businessId: loggedInBusiness._id },
       { isDeleted: true, deletedDate: Date.now() },
       { new: true, runValidators: true }
     );
 
-    return res.status(200).json({ msg: "Okay" });
+    return res.status(200).json({ msg: "Ok" });
   }
 );
 
-module.exports = router; */
+module.exports = router;

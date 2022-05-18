@@ -10,28 +10,19 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors({ origin: process.env.REACT_APP_URL }));
 
-const businessRouter = require("./routes/business.routes");
+const businessRouter = require("./api/routes/business.routes");
 app.use("/api/business", businessRouter);
 
-const pointsRouter = require("./routes/points.routes");
-app.use("/api/points", pointsRouter);
+const promotionRouter = require("./api/routes/promotion.routes");
+app.use("/api/promotion", promotionRouter);
 
-const UserPointsRouter = require("./routes/UserPoints.routes");
+const UserPointsRouter = require("./api/routes/userPoints.routes");
 app.use("/api/user-points", UserPointsRouter);
 
-/*const discountRouter = require("./routes/discount.routes");
-app.use("/api/discount", discountRouter);
-
-const userDiscountRouter = require("./routes/userDiscount.routes");
-app.use("/api/user-discount", userDiscountRouter);
-
-const uploadRouter = require("./routes/uploadImages.routes");
-app.use(`/api/upload`, uploadRouter);*/
-
-const resetPasswordRouter = require("./routes/resetPassword.routes");
+const resetPasswordRouter = require("./api/routes/resetPassword.routes");
 app.use(`/api/password`, resetPasswordRouter);
 
-const compensationRuleRouter = require("./routes/compensationRules.routes");
+const compensationRuleRouter = require("./api/routes/compensationRules.routes");
 app.use(`/api/compensation-rule`, compensationRuleRouter);
 
 app.listen(Number(process.env.PORT), () =>

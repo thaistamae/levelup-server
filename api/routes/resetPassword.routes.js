@@ -25,7 +25,7 @@ router.post("/forgot-password", async (req, res) => {
     let user = await BusinessModel.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ msg: "Usuário não encontrado" });
+      return res.status(400).json({ msg: "User not found" });
     }
 
     const temporaryToken = jwt.sign(
@@ -64,7 +64,7 @@ router.post("/forgot-password", async (req, res) => {
       }
       res.status(200).json({ message: "E-mail enviado com sucesso" });
     });
-} catch (err) {
+  } catch (err) {
     console.error(err);
   }
 });
@@ -112,10 +112,10 @@ router.put("/reset-password/:token", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-      await BusinessModel.findOneAndUpdate(
-        { _id: user._id },
-        { $set: { passwordHash: hashedPassword, resetPassword: "" } }
-      );
+    await BusinessModel.findOneAndUpdate(
+      { _id: user._id },
+      { $set: { passwordHash: hashedPassword, resetPassword: "" } }
+    );
 
     res.status(200).json({ message: "Senha redefinida com sucesso" });
   } catch (err) {

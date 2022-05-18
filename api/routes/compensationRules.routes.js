@@ -21,10 +21,10 @@ router.post(
     }
 
     try {
-      const loggedInUser = req.currentUser;
+      const loggedInBusiness = req.currentUser;
       const createRule = await CompensationRulesModel.create({
         ...req.body,
-        businessId: loggedInUser._id,
+        businessId: loggedInBusiness._id,
       });
 
       return res.status(201).json(createRule);
@@ -41,13 +41,15 @@ router.patch(
   attachCurrentBusiness,
   async (req, res) => {
     try {
-      if(!req.body.optionalAddition){
-        return res.status(400).json({msg: "Gentileza fornecer campo correto"})
+      if (!req.body.optionalAddition) {
+        return res
+          .status(400)
+          .json({ msg: "Gentileza fornecer campo correto" });
       }
-      const loggedInUser = req.currentUser;
+      const loggedInBusiness = req.currentUser;
       const addOptionalRule = await CompensationRulesModel.findOneAndUpdate(
-        { businessId: loggedInUser._id },
-        { $push:{optionalAddition: {...req.body}}  },
+        { businessId: loggedInBusiness._id },
+        { $push: { optionalAddition: { ...req.body } } },
         { new: true, runValidators: true }
       );
 
@@ -70,10 +72,10 @@ router.get(
   attachCurrentBusiness,
   async (req, res) => {
     try {
-      const loggedInUser = req.currentUser;
-      const compensationRule = await CompensationRulesModel.find(
-        { businessId: loggedInUser._id },
-      );
+      const loggedInBusiness = req.currentUser;
+      const compensationRule = await CompensationRulesModel.find({
+        businessId: loggedInBusiness._id,
+      });
 
       return res.status(200).json(compensationRule);
     } catch (err) {

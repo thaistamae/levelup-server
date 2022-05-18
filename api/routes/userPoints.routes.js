@@ -13,11 +13,11 @@ router.post(
     console.log(req.body);
 
     try {
-      const loggedInUser = req.currentUser;
+      const loggedInBusiness = req.currentUser;
 
       const userPoints = await UserPointsModel.create({
         ...req.body,
-        businessId: loggedInUser._id,
+        businessId: loggedInBusiness._id,
       });
 
       return res.status(201).json(userPoints);
@@ -36,9 +36,9 @@ router.get(
     console.log(req.headers);
 
     try {
-      const loggedInUser = req.currentUser;
+      const loggedInBusiness = req.currentUser;
       const finduserPoints = await UserPointsModel.find({
-        businessId: loggedInUser._id,
+        businessId: loggedInBusiness._id,
       });
 
       return res.status(200).json(finduserPoints);
@@ -106,11 +106,9 @@ router.patch(
 
         return res.status(200).json(creditUserPoints);
       } else {
-        return res
-          .status(401)
-          .json({
-            msg: "o cliente não possui pontos suficientes para creditar",
-          });
+        return res.status(401).json({
+          msg: "o cliente não possui pontos suficientes para creditar",
+        });
       }
     } catch (err) {
       console.log(err);
