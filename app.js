@@ -10,19 +10,19 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors({ origin: process.env.REACT_APP_URL }));
 
-const businessRouter = require("./api/routes/business.routes");
+const businessRouter = require("./api/v1/routes/business.routes");
 app.use("/api/business", businessRouter);
 
-const promotionRouter = require("./api/routes/promotion.routes");
+const promotionRouter = require("./api/v1/routes/promotion.routes");
 app.use("/api/promotion", promotionRouter);
 
-const UserPointsRouter = require("./api/routes/userPoints.routes");
+const UserPointsRouter = require("./api/v1/routes/userPoints.routes");
 app.use("/api/user-points", UserPointsRouter);
 
-const resetPasswordRouter = require("./api/routes/resetPassword.routes");
+const resetPasswordRouter = require("./api/v1/routes/resetPassword.routes");
 app.use(`/api/password`, resetPasswordRouter);
 
-const compensationRuleRouter = require("./api/routes/compensationRules.routes");
+const compensationRuleRouter = require("./api/v1/routes/compensationRules.routes");
 app.use(`/api/compensation-rule`, compensationRuleRouter);
 
 app.listen(Number(process.env.PORT), () =>

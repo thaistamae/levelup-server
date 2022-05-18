@@ -2,11 +2,13 @@ const router = require("express").Router();
 
 const businessController = require("../controllers/businessController");
 
-router.post("/signup", async (req)  => {
-     businessController.signUp(req.body)
+router.post("/signup", async(req, res)  => {
+     businessController.signUp(req.body, res)
 });
 
-router.post("/login", businessController.login);
+router.post("/login", async(req, res) => {
+     businessController.login(req.body, res)
+});
 
 router.get("/profile", businessController.showBusinessProfile);
 

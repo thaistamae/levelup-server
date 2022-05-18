@@ -1,36 +1,46 @@
 const bcrypt = require("bcryptjs");
-const generateTokenByJwt = require("../../config/jwt.config");
+const generateTokenByJwt = require("../../../config/jwt.config");
+const statusServices = require("./status.services");
 const BusinessModel = require("../models/Business.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentBusiness = require("../middlewares/attachCurrentBusiness");
 const dataHelpers = require("../helpers/data.helpers");
+const msgsHelpers = require("../helpers/msgs.helpers")
 
 const findBusinessByEmail = async (email) => {
-  return await BusinessModel.findOne({ email: email });
+  return await BusinessModel.findOne({ email });
 };
 
 const saltCryptographyRules = bcrypt.genSalt(dataHelpers.saltRounds);
 
 const encryptedPassword = async (password) => {
-  return bcrypt.hash(password, saltCryptographyRules);
-}
+  return bcrypt.hash(password, await saltCryptographyRules);
+};
 
-
-const createUser = async () => {
+const createUser = async (req) => {
   await BusinessModel.create({
-    ...req.body,
-    passwordHash: encryptedPassword,
+    ...req,
+    passwordHash: await encryptedPassword(req.password),
   });
 };
 
-const generateToken = async () => {
-  if (await bcrypt.compare(password, findBusinessByEmail.passwordHash)) {
-    const token = generateTokenByJwt(findBusinessByEmail);
+const generateToken = async (req, res) => {
+  
+  const user = await findBusinessByEmail(req.email);
+  console.log(req.password, user.passwordHash)
+  console.log(await bcrypt.compare(req.password, user.passwordHash))
+  if (await bcrypt.compare(req.password, user.passwordHash)) {
+    generateTokenByJwt(user);
+    return statusServices.successStatus(res).json(msgsHelpers.successMsg);
+  } else {
+    return statusServices
+      .unauthorizedStatus(res)
+      .json(msgsHelpers.invalidPasswordOrEmailMsg);
   }
 };
 
 const loggedInBusiness = async (req) => {
-  return req.currentUser
+  return req.currentUser;
 };
 
 const updatedBusiness = async (req) => {
@@ -60,5 +70,5 @@ module.exports = {
   loggedInBusiness,
   updatedBusiness,
   isDuplicateKeyError,
-  softDeleteBusinessProfile
+  softDeleteBusinessProfile,
 };
