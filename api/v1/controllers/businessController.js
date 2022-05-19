@@ -23,44 +23,27 @@ const signUp = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  if (!await businessServices.findBusinessByEmail(req.email)) {
+  if (!(await businessServices.findBusinessByEmail(req.email))) {
     return statusServices
       .badRequestStatus(res)
       .json(msgsHelpers.invalidEmailMsg);
   }
-  businessServices.generateToken(req, res)
+  businessServices.generateToken(req, res);
 };
 
-const showBusinessProfile = async (res) => {
-  try {
-    if (
-      isAuthenticated &&
-      attachCurrentBusiness &&
-      businessServices.loggedInBusiness
-    ) {
-      return statusServices
-        .successStatus(res)
-        .json(businessServices.loggedInBusiness);
-    } else {
-      return statusServices
-        .notFoundStatus(res)
-        .json(msgsHelpers.invalidUserMsg);
-    }
-  } catch (err) {
-    return statusServices.internalServerErrorStatus(res).json({
-      msg: JSON.stringify(err),
-    });
+const showBusinessProfile = async (req, res) => {
+  const profile = businessServices.loggedInBusiness(req);
+  if (await profile) {
+    return statusServices.successStatus(res).json(await profile);
+  } else {
+    return statusServices.notFoundStatus(res).json(msgsHelpers.invalidUserMsg);
   }
 };
 
-const updateProfile = async (res) => {
+const updateProfile = async (req, res) => {
   try {
-    if (isAuthenticated && attachCurrentBusiness) {
-      businessServices.updatedBusiness;
-      return statusServices
-        .successStatus(res)
-        .json(businessServices.updatedBusiness);
-    }
+    await businessServices.updatedBusiness(req);
+    return statusServices.successStatus(res).json(msgsHelpers.successMsg);
   } catch (err) {
     if (businessServices.isDuplicateKeyError) {
       return statusServices
@@ -73,12 +56,10 @@ const updateProfile = async (res) => {
   }
 };
 
-const deleteProfile = async (res) => {
+const deleteProfile = async (req, res) => {
   try {
-    if (isAuthenticated && attachCurrentBusiness) {
-      businessServices.softDeleteBusinessProfile;
-      return statusServices.successStatus(res).json(msgsHelpers.successMsg);
-    }
+    await businessServices.softDeleteBusinessProfile(req);
+    return statusServices.successStatus(res).json(msgsHelpers.successMsg);
   } catch (err) {
     return statusServices.internalServerErrorStatus(res).json({
       msg: JSON.stringify(err),

@@ -27,11 +27,17 @@ const createUser = async (req) => {
 const generateToken = async (req, res) => {
   
   const user = await findBusinessByEmail(req.email);
-  console.log(req.password, user.passwordHash)
-  console.log(await bcrypt.compare(req.password, user.passwordHash))
   if (await bcrypt.compare(req.password, user.passwordHash)) {
-    generateTokenByJwt(user);
-    return statusServices.successStatus(res).json(msgsHelpers.successMsg);
+    const token = generateTokenByJwt(user);
+    return statusServices.successStatus(res).json({
+      user: {
+        name: user.name,
+        email: user.email,
+        _id: user._id,
+        role: user.role,
+      },
+      token,
+    });
   } else {
     return statusServices
       .unauthorizedStatus(res)
@@ -44,6 +50,7 @@ const loggedInBusiness = async (req) => {
 };
 
 const updatedBusiness = async (req) => {
+  const loggedInBusiness = req.currentUser;
   await BusinessModel.findOneAndUpdate(
     { _id: loggedInBusiness._id },
     { ...req.body },
@@ -55,7 +62,8 @@ const isDuplicateKeyError = async () => {
   return err.code === 11000;
 };
 
-const softDeleteBusinessProfile = async () => {
+const softDeleteBusinessProfile = async (req) => {
+  const loggedInBusiness = req.currentUser;
   await BusinessModel.findOneAndUpdate(
     { _id: loggedInBusiness._id },
     { isDeleted: true, deletedDate: Date.now() },
